@@ -1,4 +1,3 @@
-// ===== SOUND SYSTEM =====
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -594,7 +593,7 @@ function updateGame() {
   }
 
   if (mouse.down && state.player.fireCooldown === 0) {
-    shootPlayerBullet(playSound("shoot"););
+    shootPlayerBullet();
   }
 
   if ((keys["Shift"] || keys["ShiftLeft"] || keys["ShiftRight"]) && state.player.dashCooldown === 0 && state.player.dashTime === 0) {
@@ -943,7 +942,7 @@ canvas.addEventListener("mousedown", (e) => {
   if (e.button !== 0) return;
   mouse.down = true;
   if (state.mode === "playing" && state.player.fireCooldown === 0) {
-    shootPlayerBullet(playSound("shoot"););
+    shootPlayerBullet();
   }
 });
 
@@ -958,42 +957,3 @@ canvas.addEventListener("mouseleave", () => {
 
 
 
-
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-const audioCtx = new AudioCtx();
-
-function playSound(type) {
-  const o = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-
-  o.connect(g);
-  g.connect(audioCtx.destination);
-
-  if (type === "shoot") {
-    o.frequency.value = 600;
-    g.gain.value = 0.08;
-  }
-
-  if (type === "hit") {
-    o.frequency.value = 180;
-    g.gain.value = 0.15;
-  }
-
-  if (type === "bossHit") {
-    o.frequency.value = 90;
-    g.gain.value = 0.2;
-  }
-
-  if (type === "dash") {
-    o.frequency.value = 300;
-    g.gain.value = 0.1;
-  }
-
-  if (type === "jump") {
-    o.frequency.value = 450;
-    g.gain.value = 0.1;
-  }
-
-  o.start();
-  o.stop(audioCtx.currentTime + 0.1);
-}
