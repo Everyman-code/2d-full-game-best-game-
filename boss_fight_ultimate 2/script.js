@@ -594,7 +594,7 @@ function updateGame() {
   }
 
   if (mouse.down && state.player.fireCooldown === 0) {
-    shootPlayerBullet();
+    shootPlayerBullet(playSound("shoot"););
   }
 
   if ((keys["Shift"] || keys["ShiftLeft"] || keys["ShiftRight"]) && state.player.dashCooldown === 0 && state.player.dashTime === 0) {
@@ -943,7 +943,7 @@ canvas.addEventListener("mousedown", (e) => {
   if (e.button !== 0) return;
   mouse.down = true;
   if (state.mode === "playing" && state.player.fireCooldown === 0) {
-    shootPlayerBullet();
+    shootPlayerBullet(playSound("shoot"););
   }
 });
 
