@@ -1,5 +1,47 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
+// === SOUND ENGINE (NO FILES, PURE SYNTH) ===
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioCtx();
+
+function playTone(freq, duration = 0.1, type = "sine", volume = 0.2) {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.type = type;
+  osc.frequency.value = freq;
+
+  gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration);
+}
+
+// noise burst (for explosions)
+function playNoise(duration = 0.2, volume = 0.3) {
+  const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * duration, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+
+  for (let i = 0; i < data.length; i++) {
+    data[i] = Math.random() * 2 - 1;
+  }
+
+  const source = audioCtx.createBufferSource();
+  const gain = audioCtx.createGain();
+
+  source.buffer = buffer;
+  gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+  source.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  source.start();
+}
 
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
